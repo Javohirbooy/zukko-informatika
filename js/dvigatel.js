@@ -153,9 +153,9 @@
       Ovoz.gapir(eo.ovozMatn, asosiyOvozTugma);
     },
 
-    /* ---------- MOSLASH ---------- */
+    /* ---------- MOSLASH (bosish yoki sudrash) ---------- */
     moslash(sec, b, eo) {
-      eo.ovozMatn = T(b.korsatma || "Avval yuqoridan birini bos, keyin uning juftini bos!");
+      eo.ovozMatn = T(b.korsatma || "Buyumni sezadigan a'zoga sudrab tashla yoki bosib belgila!");
       sec.innerHTML = `
         <h2>${ikon("🎮")} ${T(b.sarlavha || "Moslashtir!")}</h2>
         ${korsatmaHtml(eo.ovozMatn)}
@@ -169,18 +169,81 @@
       const fikr = fikrEl(sec);
       let tanlangan = null;
       let topilgan = 0;
+      let endiSudraldi = false;
+
+      function natijaBer(buyumEl, azoEl) {
+        if (buyumEl.dataset.id === azoEl.dataset.id) {
+          Tovush.togri();
+          buyumEl.classList.remove("tanlangan");
+          buyumEl.classList.add("topildi");
+          azoEl.classList.add("topildi-azo");
+          fikrYoz(fikr, T("To'g'ri! Barakalla!") + " 🎉", true);
+          tanlangan = null;
+          topilgan++;
+          if (topilgan === b.juftlar.length) setTimeout(keyingi, 850);
+        } else {
+          Tovush.xato();
+          xatolar++;
+          azoEl.classList.add("silkinish");
+          setTimeout(() => azoEl.classList.remove("silkinish"), 450);
+          fikrYoz(fikr, F_OYLA(), false);
+        }
+      }
 
       aralashtir(b.juftlar.map((j, i) => ({ ...j, id: i }))).forEach(j => {
         const el = document.createElement("button");
         el.className = "buyum";
         el.dataset.id = j.id;
         el.innerHTML = `${jonliIkon(j.chap)}<span class="yozuv">${ikonMatn(T(j.chapNom || ""))}</span>`;
-        el.addEventListener("click", () => {
-          Tovush.chertish();
-          chapEl.querySelectorAll(".buyum").forEach(x => x.classList.remove("tanlangan"));
-          el.classList.add("tanlangan");
-          tanlangan = el;
-          if (j.chapNom) Ovoz.gapir(T(j.chapNom));
+        el.addEventListener("pointerdown", e => {
+          if (el.classList.contains("topildi")) return;
+          const startX = e.clientX, startY = e.clientY;
+          let sudralmoqda = false, klon = null;
+          const move = ev => {
+            const dx = ev.clientX - startX, dy = ev.clientY - startY;
+            if (!sudralmoqda && Math.hypot(dx, dy) > 8) {
+              sudralmoqda = true;
+              chapEl.querySelectorAll(".buyum").forEach(x => x.classList.remove("tanlangan"));
+              el.classList.add("tanlangan", "sudralmoqda");
+              klon = el.cloneNode(true);
+              klon.classList.add("sudrash-klon");
+              klon.classList.remove("sudralmoqda");
+              klon.style.width = el.offsetWidth + "px";
+              klon.style.height = el.offsetHeight + "px";
+              document.body.appendChild(klon);
+            }
+            if (sudralmoqda && klon) {
+              klon.style.left = ev.clientX + "px";
+              klon.style.top = ev.clientY + "px";
+              const t = document.elementFromPoint(ev.clientX, ev.clientY);
+              const azo = t && t.closest ? t.closest(".azo") : null;
+              ongEl.querySelectorAll(".azo").forEach(x => x.classList.toggle("ustida", x === azo));
+            }
+          };
+          const up = ev => {
+            window.removeEventListener("pointermove", move);
+            window.removeEventListener("pointerup", up);
+            ongEl.querySelectorAll(".azo").forEach(x => x.classList.remove("ustida"));
+            if (sudralmoqda) {
+              if (klon) klon.remove();
+              el.classList.remove("sudralmoqda");
+              endiSudraldi = true;
+              setTimeout(() => (endiSudraldi = false), 120);
+              const t = document.elementFromPoint(ev.clientX, ev.clientY);
+              const azo = t && t.closest ? t.closest(".azo") : null;
+              if (azo) natijaBer(el, azo);
+              else el.classList.remove("tanlangan");
+            } else {
+              // BOSISH: shu buyumni belgilaymiz
+              Tovush.chertish();
+              chapEl.querySelectorAll(".buyum").forEach(x => x.classList.remove("tanlangan"));
+              el.classList.add("tanlangan");
+              tanlangan = el;
+              if (j.chapNom) Ovoz.gapir(T(j.chapNom));
+            }
+          };
+          window.addEventListener("pointermove", move);
+          window.addEventListener("pointerup", up);
         });
         chapEl.appendChild(el);
       });
@@ -191,27 +254,13 @@
         el.dataset.id = j.id;
         el.innerHTML = `${jonliIkon(j.ong)}<span class="yozuv">${ikonMatn(T(j.ongNom || ""))}</span>`;
         el.addEventListener("click", () => {
+          if (endiSudraldi) return; // sudrashdan keyingi soxta bosishni e'tiborsiz qoldiramiz
           if (!tanlangan) {
             fikrYoz(fikr, T("Avval yuqoridan birini tanla!") + " 👆", false);
             Ovoz.gapir(T("Avval yuqoridan birini tanla!"));
             return;
           }
-          if (tanlangan.dataset.id === el.dataset.id) {
-            Tovush.togri();
-            tanlangan.classList.remove("tanlangan");
-            tanlangan.classList.add("topildi");
-            el.classList.add("topildi-azo");
-            fikrYoz(fikr, T("To'g'ri! Barakalla!") + " 🎉", true);
-            tanlangan = null;
-            topilgan++;
-            if (topilgan === b.juftlar.length) setTimeout(keyingi, 850);
-          } else {
-            Tovush.xato();
-            xatolar++;
-            el.classList.add("silkinish");
-            setTimeout(() => el.classList.remove("silkinish"), 450);
-            fikrYoz(fikr, F_OYLA(), false);
-          }
+          natijaBer(tanlangan, el);
         });
         ongEl.appendChild(el);
       });

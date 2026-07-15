@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Zukko — Informatika 1-sinf</title>
   <link rel="icon" href="icons/1f916.svg">
-  <link rel="stylesheet" href="css/style.css?v=5">
+  <link rel="stylesheet" href="css/style.css?v=6">
 </head>
 <body>
 
@@ -19,7 +19,11 @@
     <div class="jami-yulduz" id="jami-yulduz" title="Yig'ilgan yulduzlar"></div>
   </header>
 
+  <section class="profil-panel" id="profil-panel"></section>
+
   <main class="oquv-xarita" id="xarita"></main>
+
+  <div class="modal-fon" id="profil-modal" hidden></div>
 
   <script src="js/lottie.min.js"></script>
   <script src="js/anim_list.js"></script>
@@ -134,6 +138,67 @@
       bobEl.appendChild(panjara);
       xarita.appendChild(bobEl);
     });
+
+    // ====== Profil, streak, medallar ======
+    Kunlar.yangila();
+    const MEDAL_IKON = { oltin: "🥇", kumush: "🥈", bronza: "🥉" };
+
+    function profilChiz() {
+      const p = Profil.ol();
+      const streak = Kunlar.holat().ketma || 1;
+      const medallar = BOBLAR.map(b => bobMedali(b.darslar.map(d => d.id)));
+      const medalSoni = medallar.filter(Boolean).length;
+      const medalHtml = medallar.map((m, i) =>
+        `<span class="medal-katak ${m ? "olindi" : "qulf"}" title="${T(BOBLAR[i].nomi)}">${m ? ikon(MEDAL_IKON[m]) : ikon("🔒")}</span>`
+      ).join("");
+      const panel = document.getElementById("profil-panel");
+      panel.innerHTML = `
+        <button class="avatar-btn" id="avatar-btn" title="${T("Profilim") || "Profil"}">${jonliIkon(p.avatar)}</button>
+        <div class="profil-info">
+          <button class="profil-ism" id="profil-ism">${p.ism ? p.ism : T("Ismingni yoz") + " ✏️"}</button>
+          <div class="profil-stat">
+            <span class="stat-chip">${ikon("🔥")} ${streak} ${T("kun")}</span>
+            <span class="stat-chip">${ikon("🏅")} ${medalSoni}/4</span>
+          </div>
+        </div>
+        <div class="medallar" title="${T("Mening yutuqlarim")}">${medalHtml}</div>
+        <a class="sertifikat-btn" href="certificate.html">${ikon("🎓")} ${T("Sertifikat")}</a>`;
+      jonlilashtir(panel);
+      document.getElementById("avatar-btn").addEventListener("click", profilTahrir);
+      document.getElementById("profil-ism").addEventListener("click", profilTahrir);
+    }
+
+    function profilTahrir() {
+      const p = Profil.ol();
+      const modal = document.getElementById("profil-modal");
+      modal.hidden = false;
+      modal.innerHTML = `
+        <div class="modal-oyna">
+          <h3>${ikon("🙂")} ${T("Ismingni kirit:")}</h3>
+          <input type="text" id="ism-input" class="ism-input" maxlength="16" value="${p.ism.replace(/"/g, "&quot;")}" placeholder="...">
+          <div class="modal-label">${T("Avatar tanla:")}</div>
+          <div class="avatar-panjara" id="avatar-panjara">
+            ${Profil.AVATARLAR.map(a => `<button class="avatar-tanla ${a === p.avatar ? "faol" : ""}" data-a="${a}">${ikon(a)}</button>`).join("")}
+          </div>
+          <button class="katta-tugma" id="profil-saqla">${T("Saqlash")} ✅</button>
+        </div>`;
+      let tanlangan = p.avatar;
+      modal.querySelectorAll(".avatar-tanla").forEach(b => b.addEventListener("click", () => {
+        tanlangan = b.dataset.a;
+        modal.querySelectorAll(".avatar-tanla").forEach(x => x.classList.toggle("faol", x === b));
+        Tovush.chertish();
+      }));
+      modal.addEventListener("click", e => { if (e.target === modal) modal.hidden = true; });
+      document.getElementById("profil-saqla").addEventListener("click", () => {
+        const ism = document.getElementById("ism-input").value.trim();
+        Profil.saqla({ ism, avatar: tanlangan });
+        modal.hidden = true;
+        Tovush.togri();
+        profilChiz();
+      });
+    }
+
+    profilChiz();
     jonlilashtir(document.body);
   </script>
 </body>

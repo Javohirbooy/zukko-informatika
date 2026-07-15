@@ -44,7 +44,22 @@ const SYS = {
   "3-bob. Tomonlar va yo'nalishlar": { ru: "Глава 3. Стороны и направления", en: "Chapter 3. Sides and directions" },
   "4-bob. Samaradorlik": { ru: "Глава 4. Эффективность", en: "Chapter 4. Efficiency" },
   "Tez kunda": { ru: "Скоро", en: "Coming soon" },
-  "dars": { ru: "урок", en: "lesson" }
+  "dars": { ru: "урок", en: "lesson" },
+  "kun": { ru: "дн.", en: "days" },
+  "Sertifikat": { ru: "Сертификат", en: "Certificate" },
+  "Ismingni yoz": { ru: "Впиши имя", en: "Enter your name" },
+  "Ismingni kirit:": { ru: "Введи своё имя:", en: "Enter your name:" },
+  "Avatar tanla:": { ru: "Выбери аватар:", en: "Choose an avatar:" },
+  "Saqlash": { ru: "Сохранить", en: "Save" },
+  "Mening yutuqlarim": { ru: "Мои достижения", en: "My achievements" },
+  "Zukko o'quvchisi": { ru: "Ученик Zukko", en: "Zukko learner" },
+  "Tabriklaymiz!": { ru: "Поздравляем!", en: "Congratulations!" },
+  "ushbu darslikni muvaffaqiyatli tamomladi": { ru: "успешно прошёл(ла) этот курс", en: "has successfully completed this course" },
+  "Chop etish": { ru: "Печать", en: "Print" },
+  "Bosh sahifaga qaytish": { ru: "На главную", en: "Back to home" },
+  "Yig'ilgan yulduzlar": { ru: "Собрано звёзд", en: "Stars earned" },
+  "Buyumni sezadigan a'zoga sudrab tashla yoki bosib belgila!": { ru: "Перетащи предмет к нужному органу или нажми!", en: "Drag the item to the right organ, or tap!" },
+  "Profilim": { ru: "Мой профиль", en: "My profile" }
 };
 
 // Tarjima funksiyasi: joriy tilga o'giradi (topilmasa — o'zbekcha)
@@ -145,6 +160,7 @@ function boshqaruvHtml() {
   const tugma = x => `<button class="til-btn ${x === t ? "faol" : ""}" data-til="${x}">${x.toUpperCase()}</button>`;
   return `
     <div class="til-tanla">${["uz", "ru", "en"].map(tugma).join("")}</div>
+    <button class="mute-tugma musiqa-tugma ${Musiqa.yoqilganmi() ? "faol" : ""}" id="musiqa-tugma" title="Musiqa">${ikon("🎵")}</button>
     <button class="mute-tugma" id="mute-tugma" title="Ovoz">${Sozlama.jimmi() ? ikon("🔕") : ikon("🔔")}</button>`;
 }
 function boshqaruvBogla(root, tilOzgardi) {
@@ -163,6 +179,12 @@ function boshqaruvBogla(root, tilOzgardi) {
     Sozlama.belgila(jim);
     if (jim) Ovoz.toxtat();
     m.innerHTML = jim ? ikon("🔕") : ikon("🔔");
+  });
+  const mu = root.querySelector("#musiqa-tugma");
+  if (mu) mu.addEventListener("click", () => {
+    const y = !Musiqa.yoqilganmi();
+    Musiqa.belgila(y);
+    mu.classList.toggle("faol", y);
   });
 }
 
@@ -323,4 +345,78 @@ function yulduzQator(nechta, jami = 3) {
   let s = "";
   for (let i = 0; i < jami; i++) s += yulduzIkon(i < nechta);
   return s;
+}
+
+/* ============ Bola profili ============ */
+const Profil = {
+  KALIT: "zukko_profil",
+  AVATARLAR: ["🦁", "🐯", "🐼", "🐰", "🦊", "🐵", "🐸", "🐨", "🦄", "🐷", "🐧", "🐙"],
+  ol() {
+    try { return JSON.parse(localStorage.getItem(this.KALIT)) || { ism: "", avatar: "🦁" }; }
+    catch { return { ism: "", avatar: "🦁" }; }
+  },
+  saqla(p) { localStorage.setItem(this.KALIT, JSON.stringify(p)); }
+};
+
+/* ============ Ketma-ket kunlar (streak) ============ */
+const Kunlar = {
+  KALIT: "zukko_kunlar",
+  _bugun() { const d = new Date(); return d.getFullYear() + "-" + (d.getMonth() + 1) + "-" + d.getDate(); },
+  holat() {
+    try { return JSON.parse(localStorage.getItem(this.KALIT)) || { oxirgi: "", ketma: 0 }; }
+    catch { return { oxirgi: "", ketma: 0 }; }
+  },
+  yangila() {
+    const h = this.holat(), bugun = this._bugun();
+    if (h.oxirgi === bugun) return h.ketma || 1;
+    const k = new Date(); k.setDate(k.getDate() - 1);
+    const kecha = k.getFullYear() + "-" + (k.getMonth() + 1) + "-" + k.getDate();
+    h.ketma = (h.oxirgi === kecha) ? (h.ketma + 1) : 1;
+    h.oxirgi = bugun;
+    localStorage.setItem(this.KALIT, JSON.stringify(h));
+    return h.ketma;
+  }
+};
+
+/* ============ Bob medali (yulduzlarga qarab) ============ */
+function bobMedali(darsIdlar) {
+  const y = darsIdlar.map(id => Yulduzlar.ol(id));
+  if (y.some(v => v === 0)) return null; // bob hali tugallanmagan
+  const min = Math.min(...y);
+  return min >= 3 ? "oltin" : min >= 2 ? "kumush" : "bronza";
+}
+
+/* ============ Fon musiqasi (WebAudio — faylsiz, yumshoq halqa) ============ */
+const Musiqa = {
+  KALIT: "zukko_musiqa",
+  ctx: null, timer: null, pos: 0,
+  yoqilganmi() { return localStorage.getItem(this.KALIT) === "1"; }, // standart: o'chiq
+  belgila(y) {
+    localStorage.setItem(this.KALIT, y ? "1" : "0");
+    if (y) this.boshla(); else this.toxtat();
+  },
+  _nota(freq) {
+    if (!this.ctx) return;
+    const t = this.ctx.currentTime;
+    const osc = this.ctx.createOscillator(), g = this.ctx.createGain();
+    osc.type = "sine"; osc.frequency.value = freq;
+    g.gain.setValueAtTime(0.0001, t);
+    g.gain.exponentialRampToValueAtTime(0.05, t + 0.06);
+    g.gain.exponentialRampToValueAtTime(0.0001, t + 0.6);
+    osc.connect(g).connect(this.ctx.destination);
+    osc.start(t); osc.stop(t + 0.66);
+  },
+  boshla() {
+    if (this.timer) return;
+    try { this.ctx = this.ctx || new (window.AudioContext || window.webkitAudioContext)(); } catch (e) { return; }
+    if (this.ctx.state === "suspended") this.ctx.resume();
+    const M = [523.25, 587.33, 659.25, 783.99, 659.25, 587.33, 440, 493.88, 523.25, 659.25, null, 392,
+               523.25, 659.25, 783.99, 880, 783.99, 659.25, 440, null, 523.25, null];
+    this.timer = setInterval(() => { const f = M[this.pos % M.length]; if (f) this._nota(f); this.pos++; }, 430);
+  },
+  toxtat() { if (this.timer) { clearInterval(this.timer); this.timer = null; } }
+};
+// Birinchi bosishда (brauzer qoidasi) — yoqilgan bo'lsa musiqani boshlaymiz
+if (typeof window !== "undefined") {
+  window.addEventListener("pointerdown", function _mus() { if (Musiqa.yoqilganmi()) Musiqa.boshla(); }, { once: true });
 }

@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sertifikat — Zukko</title>
+  <link rel="icon" href="icons/1f916.svg">
+  <link rel="stylesheet" href="css/style.css?v=6">
+  <style>
+    .sert-qobiq { max-width: 820px; margin: 0 auto; padding: 24px 18px 60px; }
+    .sertifikat {
+      background: #fffdf6;
+      border-radius: 26px;
+      padding: 40px 34px;
+      box-shadow: 0 18px 44px rgba(60,70,130,0.22);
+      border: 6px solid var(--sariq);
+      text-align: center;
+      position: relative;
+    }
+    .sert-lenta { font-size: 3.4rem; }
+    .sert-sarlavha { font-size: 2rem; font-weight: 900; color: var(--asosiy); margin: 6px 0 2px; }
+    .sert-kichik { color: #7a7f9c; font-weight: 700; margin-bottom: 18px; }
+    .sert-ism { font-size: 2.4rem; font-weight: 900; margin: 10px 0; color: var(--matn); }
+    .sert-ism .ik { vertical-align: -0.15em; }
+    .sert-matn { font-size: 1.15rem; font-weight: 700; color: #4a5070; margin-bottom: 18px; }
+    .sert-yulduz { font-size: 1.5rem; font-weight: 800; margin: 10px 0; }
+    .sert-medallar { font-size: 2.2rem; margin: 8px 0 4px; display: flex; gap: 10px; justify-content: center; }
+    .sert-past { display: flex; justify-content: space-between; align-items: flex-end; margin-top: 26px; font-weight: 700; color: #6b7194; }
+    .sert-imzo { border-top: 3px solid #d5d9ef; padding-top: 6px; min-width: 150px; }
+    .tugma-qator { margin-top: 22px; }
+    @media print {
+      body { background: #fff; }
+      body::before { display: none; }
+      .bosilmaydi { display: none !important; }
+      .sertifikat { box-shadow: none; }
+    }
+  </style>
+</head>
+<body>
+  <div class="sert-qobiq">
+    <div class="sertifikat" id="sertifikat"></div>
+    <div class="tugma-qator bosilmaydi">
+      <button class="katta-tugma" id="chop-tugma"></button>
+      <a class="katta-tugma ikkinchi" id="uy-havola" href="index.html" style="text-decoration:none;display:inline-flex;align-items:center;gap:8px;"></a>
+    </div>
+  </div>
+
+  <script src="js/lottie.min.js"></script>
+  <script src="js/anim_list.js"></script>
+  <script src="js/umumiy.js"></script>
+  <script src="js/tarjima.js"></script>
+  <script>
+    const BOBLAR_ID = [[1,9],[10,16],[17,25],[26,33]];
+    let jamiYulduz = 0;
+    for (let i = 1; i <= 33; i++) jamiYulduz += Yulduzlar.ol(i);
+    const medallar = BOBLAR_ID.map(([a,b]) => {
+      const ids = []; for (let i = a; i <= b; i++) ids.push(i);
+      return bobMedali(ids);
+    });
+    const MEDAL_IKON = { oltin: "🥇", kumush: "🥈", bronza: "🥉" };
+    const p = Profil.ol();
+    const ism = p.ism || T("Zukko o'quvchisi");
+    const d = new Date();
+    const sana = String(d.getDate()).padStart(2,"0") + "." + String(d.getMonth()+1).padStart(2,"0") + "." + d.getFullYear();
+
+    document.getElementById("sertifikat").innerHTML = `
+      <div class="sert-lenta">${jonliIkon("🏆")}</div>
+      <div class="sert-sarlavha">${T("Tabriklaymiz!")}</div>
+      <div class="sert-kichik">Zukko bilan Informatika · 1-${T("dars").replace("dars","sinf") || "sinf"}</div>
+      <div class="sert-ism">${jonliIkon(p.avatar)} ${ism.replace(/</g,"&lt;")}</div>
+      <div class="sert-matn">${T("ushbu darslikni muvaffaqiyatli tamomladi")}</div>
+      <div class="sert-yulduz">${yulduzIkon(true)} ${T("Yig'ilgan yulduzlar")}: ${jamiYulduz} / 99</div>
+      <div class="sert-medallar">${medallar.map(m => m ? ikon(MEDAL_IKON[m]) : ikon("🔒")).join("")}</div>
+      <div class="sert-past">
+        <div class="sert-imzo">Zukko ${ikon("🤖")}</div>
+        <div class="sert-imzo">${sana}</div>
+      </div>`;
+    document.getElementById("chop-tugma").innerHTML = ikon("🖨️") + " " + T("Chop etish");
+    document.getElementById("uy-havola").innerHTML = T("Bosh sahifaga qaytish") + " " + ikon("🏠");
+    document.getElementById("chop-tugma").addEventListener("click", () => window.print());
+    jonlilashtir(document.body);
+  </script>
+</body>
+</html>
