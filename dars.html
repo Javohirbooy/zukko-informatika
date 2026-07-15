@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dars — Zukko</title>
+  <link rel="icon" href="icons/1f916.svg">
+  <link rel="stylesheet" href="css/style.css?v=5">
+</head>
+<body>
+
+  <div class="dars-qobiq">
+    <div class="dars-ust">
+      <a class="uyga-tugma" href="index.html" title="Bosh sahifa" id="uyga-tugma"></a>
+      <button class="orqaga-tugma" id="orqaga-tugma" title="Ortga"></button>
+      <div class="qadam-nuqtalar" id="nuqtalar"></div>
+      <div class="boshqaruv" id="boshqaruv"></div>
+      <button class="ovoz-tugma" id="asosiy-ovoz" title="O'qib ber"></button>
+    </div>
+    <div id="ekranlar"></div>
+  </div>
+
+  <script src="js/lottie.min.js"></script>
+  <script src="js/anim_list.js"></script>
+  <script src="js/umumiy.js"></script>
+  <script src="js/tarjima.js"></script>
+  <script src="js/uz_audio.js" onerror="console.log('uz_audio hali yo\'q')"></script>
+  <script>
+    document.getElementById("uyga-tugma").innerHTML = ikon("🏠");
+    document.getElementById("asosiy-ovoz").innerHTML = ikon("🔊");
+    const orqaga = document.getElementById("orqaga-tugma");
+    orqaga.innerHTML = ikon("⬅️");
+    orqaga.addEventListener("click", () => window.dispatchEvent(new Event("zukko-orqaga")));
+    const bq = document.getElementById("boshqaruv");
+    bq.innerHTML = boshqaruvHtml();
+    boshqaruvBogla(bq, () => window.dispatchEvent(new Event("zukko-til-ozgardi")));
+
+    // ?id=N dan dars raqamini olamiz, mos ma'lumot faylini yuklaymiz, keyin dvigatelni ishga tushiramiz
+    (function () {
+      const params = new URLSearchParams(location.search);
+      const id = parseInt(params.get("id"), 10) || 1;
+      const data = document.createElement("script");
+      data.src = "js/darslar/dars" + id + ".js";
+      data.onload = function () {
+        const dv = document.createElement("script");
+        dv.src = "js/dvigatel.js";
+        document.body.appendChild(dv);
+      };
+      data.onerror = function () {
+        document.getElementById("ekranlar").innerHTML =
+          "<div class='ekran korinadi'><h2>Bu dars hali tayyor emas " + ikon("🔒") + "</h2>" +
+          "<a class='katta-tugma' href='index.html' style='text-decoration:none;display:inline-flex;align-items:center;gap:8px'>Bosh sahifa " + ikon("🏠") + "</a></div>";
+      };
+      document.body.appendChild(data);
+    })();
+  </script>
+</body>
+</html>

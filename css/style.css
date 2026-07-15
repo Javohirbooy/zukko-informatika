@@ -1,0 +1,968 @@
+/* ============ ZUKKO — 1-sinf Informatika platformasi ============ */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+
+:root {
+  --asosiy: #4f6df5;
+  --asosiy-toq: #3a53c4;
+  --sariq: #ffc93c;
+  --yashil: #34c77b;
+  --qizil: #ff6b6b;
+  --pushti: #ff8fab;
+  --oq: #ffffff;
+  --matn: #2d3350;
+  --soya: 0 8px 24px rgba(45, 51, 80, 0.12);
+}
+
+html {
+  font-size: 17px;
+}
+
+body {
+  font-family: "Nunito", "Segoe UI", "Comic Sans MS", sans-serif;
+  background: linear-gradient(160deg, #dff1ff 0%, #f3e8ff 55%, #ffeef5 100%);
+  min-height: 100vh;
+  color: var(--matn);
+}
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+  border: none;
+}
+
+/* ---------- Sarlavha ---------- */
+.sarlavha {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 18px 22px;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.sarlavha .maskot {
+  font-size: 3rem;
+  animation: tebranish 3s ease-in-out infinite;
+}
+
+@keyframes tebranish {
+  0%, 100% { transform: rotate(-6deg); }
+  50% { transform: rotate(6deg); }
+}
+
+.sarlavha h1 {
+  font-size: 1.6rem;
+  line-height: 1.2;
+}
+
+.sarlavha .kichik {
+  font-size: 0.95rem;
+  color: #6b7194;
+  font-weight: 600;
+}
+
+/* ---------- Bosh sahifa: boblar va darslar ---------- */
+.oquv-xarita {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 10px 22px 60px;
+}
+
+.bob {
+  margin-top: 26px;
+}
+
+.bob-nomi {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 1.25rem;
+  font-weight: 800;
+  margin-bottom: 14px;
+}
+
+.bob-nomi .belgi {
+  font-size: 1.6rem;
+}
+
+.darslar-panjara {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 14px;
+}
+
+.dars-karta {
+  background: var(--oq);
+  border-radius: 20px;
+  padding: 16px;
+  box-shadow: var(--soya);
+  text-decoration: none;
+  color: var(--matn);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  border: 3px solid transparent;
+  transition: transform 0.15s, border-color 0.15s;
+  position: relative;
+}
+
+a.dars-karta:hover {
+  transform: translateY(-4px) scale(1.02);
+  border-color: var(--sariq);
+}
+
+.dars-karta .raqam {
+  font-size: 0.8rem;
+  font-weight: 800;
+  color: var(--asosiy);
+  background: #eef1ff;
+  border-radius: 999px;
+  padding: 3px 10px;
+  width: fit-content;
+}
+
+.dars-karta .nom {
+  font-weight: 800;
+  font-size: 1.02rem;
+  line-height: 1.3;
+}
+
+.dars-karta .yulduzlar {
+  font-size: 1.1rem;
+  letter-spacing: 2px;
+}
+
+.dars-karta.qulflangan {
+  opacity: 0.55;
+  filter: grayscale(0.5);
+}
+
+.dars-karta.qulflangan .nom {
+  color: #8a8fae;
+}
+
+.qulf {
+  position: absolute;
+  top: 12px;
+  right: 14px;
+  font-size: 1.2rem;
+}
+
+/* ---------- Dars sahifasi ---------- */
+.dars-qobiq {
+  max-width: 780px;
+  margin: 0 auto;
+  padding: 14px 18px 50px;
+}
+
+.dars-ust {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.uyga-tugma {
+  background: var(--oq);
+  border-radius: 14px;
+  font-size: 1.4rem;
+  padding: 8px 14px;
+  box-shadow: var(--soya);
+  text-decoration: none;
+  transition: transform 0.15s;
+}
+
+.uyga-tugma:hover { transform: scale(1.08); }
+
+.qadam-nuqtalar {
+  display: flex;
+  gap: 8px;
+  flex: 1;
+  justify-content: center;
+}
+
+.nuqta {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #d5d9ef;
+  transition: background 0.3s, transform 0.3s;
+}
+
+.nuqta.faol {
+  background: var(--sariq);
+  transform: scale(1.3);
+}
+
+.nuqta.tugadi {
+  background: var(--yashil);
+}
+
+/* ---------- Ekranlar ---------- */
+.ekran {
+  display: none;
+  background: var(--oq);
+  border-radius: 26px;
+  box-shadow: var(--soya);
+  padding: 26px 22px 30px;
+  animation: paydo 0.4s ease;
+  text-align: center;
+}
+
+.ekran.korinadi {
+  display: block;
+}
+
+@keyframes paydo {
+  from { opacity: 0; transform: translateY(18px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.ekran h2 {
+  font-size: 1.5rem;
+  margin-bottom: 6px;
+}
+
+.korsatma {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin: 10px auto 18px;
+  max-width: 560px;
+  font-size: 1.08rem;
+  font-weight: 700;
+  color: #4a5070;
+}
+
+.ovoz-tugma {
+  background: var(--sariq);
+  border-radius: 50%;
+  width: 52px;
+  height: 52px;
+  min-width: 52px;
+  font-size: 1.5rem;
+  box-shadow: 0 4px 0 #d9a520;
+  transition: transform 0.1s;
+}
+
+.ovoz-tugma:active {
+  transform: translateY(3px);
+  box-shadow: 0 1px 0 #d9a520;
+}
+
+.ovoz-tugma.gapiryapti {
+  animation: pulsatsiya 0.8s ease-in-out infinite;
+}
+
+@keyframes pulsatsiya {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.12); }
+}
+
+/* ---------- Katta rangli tugmalar ---------- */
+.katta-tugma {
+  background: var(--yashil);
+  color: var(--oq);
+  font-size: 1.3rem;
+  font-weight: 800;
+  padding: 16px 42px;
+  border-radius: 999px;
+  box-shadow: 0 6px 0 #219960;
+  transition: transform 0.1s, box-shadow 0.1s;
+  margin-top: 18px;
+}
+
+.katta-tugma:active {
+  transform: translateY(4px);
+  box-shadow: 0 2px 0 #219960;
+}
+
+.katta-tugma:disabled {
+  background: #c3c8dd;
+  box-shadow: 0 6px 0 #a6abc4;
+  cursor: not-allowed;
+}
+
+/* ---------- Maskot nutq puffagi ---------- */
+.maskot-qator {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  margin-bottom: 10px;
+}
+
+.maskot-katta {
+  font-size: 4.2rem;
+  animation: sakrash 2.4s ease-in-out infinite;
+}
+
+@keyframes sakrash {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+
+.nutq-puffagi {
+  background: #f0f4ff;
+  border: 3px solid var(--asosiy);
+  border-radius: 20px;
+  padding: 14px 18px;
+  font-size: 1.15rem;
+  font-weight: 700;
+  max-width: 420px;
+  text-align: left;
+  position: relative;
+}
+
+.nutq-puffagi::before {
+  content: "";
+  position: absolute;
+  left: -14px;
+  top: 50%;
+  transform: translateY(-50%);
+  border: 8px solid transparent;
+  border-right-color: var(--asosiy);
+}
+
+/* ---------- O'rganamiz: sezgi kartalari ---------- */
+.sezgi-panjara {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 14px;
+  margin: 16px 0;
+}
+
+.sezgi-karta {
+  background: #f7f9ff;
+  border: 3px solid #e2e7fb;
+  border-radius: 22px;
+  padding: 18px 10px 14px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  transition: transform 0.15s, border-color 0.2s, background 0.2s;
+}
+
+.sezgi-karta:hover { transform: translateY(-4px); }
+
+.sezgi-karta .rasm { font-size: 3rem; }
+
+.sezgi-karta .nom {
+  font-weight: 800;
+  font-size: 1.05rem;
+}
+
+.sezgi-karta.ochilgan {
+  border-color: var(--yashil);
+  background: #ecfbf3;
+}
+
+.sezgi-karta.ochilgan::after {
+  content: "✔";
+  color: var(--yashil);
+  font-weight: 900;
+}
+
+.sezgi-izoh {
+  min-height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #fffbea;
+  border: 2px dashed var(--sariq);
+  border-radius: 16px;
+  padding: 10px 16px;
+  font-size: 1.08rem;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+
+/* ---------- O'yin 1: Moslashtirish ---------- */
+.moslash-maydon {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+.buyumlar-qator, .azolar-qator {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px;
+}
+
+.buyum, .azo {
+  background: #f7f9ff;
+  border: 3px solid #e2e7fb;
+  border-radius: 20px;
+  width: 96px;
+  height: 96px;
+  font-size: 2.6rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.15s, border-color 0.15s, opacity 0.3s;
+}
+
+.buyum .yozuv, .azo .yozuv {
+  font-size: 0.68rem;
+  font-weight: 800;
+  color: #6b7194;
+}
+
+.buyum:hover, .azo:hover { transform: scale(1.07); }
+
+.buyum.tanlangan {
+  border-color: var(--asosiy);
+  background: #eef1ff;
+  transform: scale(1.1);
+  box-shadow: 0 0 0 4px rgba(79, 109, 245, 0.25);
+}
+
+.buyum.topildi {
+  opacity: 0;
+  pointer-events: none;
+  transform: scale(0.3);
+}
+
+.azo.topildi-azo {
+  border-color: var(--yashil);
+  background: #ecfbf3;
+}
+
+/* ---------- O'yin 2: Viktorina ---------- */
+.savol-rasm { font-size: 4.5rem; margin: 8px 0; }
+
+.savol-matn {
+  font-size: 1.2rem;
+  font-weight: 800;
+  margin-bottom: 16px;
+}
+
+.javoblar {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 14px;
+}
+
+.javob-tugma {
+  background: #f7f9ff;
+  border: 3px solid #e2e7fb;
+  border-radius: 22px;
+  width: 110px;
+  height: 110px;
+  font-size: 2.8rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  transition: transform 0.15s, border-color 0.15s, background 0.15s;
+}
+
+.javob-tugma .yozuv {
+  font-size: 0.72rem;
+  font-weight: 800;
+  color: #6b7194;
+}
+
+.javob-tugma:hover { transform: scale(1.06); }
+
+.javob-tugma.togri {
+  border-color: var(--yashil);
+  background: #ecfbf3;
+}
+
+.javob-tugma.xato {
+  border-color: var(--qizil);
+  background: #ffefef;
+}
+
+/* ---------- O'yin 3: Ortiqchasini top ---------- */
+.ortiqcha-panjara {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 14px;
+  margin: 14px 0;
+}
+
+.ortiqcha-karta {
+  background: #f7f9ff;
+  border: 3px solid #e2e7fb;
+  border-radius: 22px;
+  width: 110px;
+  height: 110px;
+  font-size: 3.2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.15s, border-color 0.15s, background 0.15s;
+}
+
+.ortiqcha-karta:hover { transform: scale(1.07); }
+
+.ortiqcha-karta.togri {
+  border-color: var(--yashil);
+  background: #ecfbf3;
+  animation: gcelebration 0.5s ease;
+}
+
+.ortiqcha-karta.xato {
+  border-color: var(--qizil);
+  background: #ffefef;
+}
+
+@keyframes gcelebration {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.2) rotate(6deg); }
+  100% { transform: scale(1); }
+}
+
+/* ---------- Silkinish (xato) ---------- */
+.silkinish {
+  animation: silkin 0.4s ease;
+}
+
+@keyframes silkin {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-8px); }
+  75% { transform: translateX(8px); }
+}
+
+/* ---------- Fikr-mulohaza satri ---------- */
+.fikr {
+  min-height: 34px;
+  font-size: 1.1rem;
+  font-weight: 800;
+  margin-top: 14px;
+}
+
+.fikr.yaxshi { color: var(--yashil); }
+.fikr.yomon { color: var(--qizil); }
+
+/* ---------- Natija ekrani ---------- */
+.medal {
+  font-size: 5.5rem;
+  animation: medal-tushish 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes medal-tushish {
+  from { transform: translateY(-80px) scale(0.3); opacity: 0; }
+  to { transform: translateY(0) scale(1); opacity: 1; }
+}
+
+.natija-yulduzlar {
+  font-size: 3rem;
+  letter-spacing: 8px;
+  margin: 10px 0;
+}
+
+.natija-yulduzlar .yulduz {
+  display: inline-block;
+  opacity: 0.25;
+  transform: scale(0.8);
+}
+
+.natija-yulduzlar .yulduz.yondi {
+  opacity: 1;
+  animation: yulduz-yonish 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+@keyframes yulduz-yonish {
+  from { transform: scale(0.3) rotate(-30deg); }
+  to { transform: scale(1.15) rotate(0); }
+}
+
+.natija-matn {
+  font-size: 1.25rem;
+  font-weight: 800;
+  margin: 8px 0 4px;
+}
+
+.tugma-qator {
+  display: flex;
+  justify-content: center;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+.katta-tugma.ikkinchi {
+  background: var(--asosiy);
+  box-shadow: 0 6px 0 var(--asosiy-toq);
+}
+
+.katta-tugma.ikkinchi:active {
+  box-shadow: 0 2px 0 var(--asosiy-toq);
+}
+
+/* ---------- Konfeti ---------- */
+.konfeti-parcha {
+  position: fixed;
+  top: -20px;
+  width: 12px;
+  height: 12px;
+  border-radius: 3px;
+  pointer-events: none;
+  z-index: 999;
+  animation: konfeti-yogish linear forwards;
+}
+
+@keyframes konfeti-yogish {
+  to {
+    transform: translateY(110vh) rotate(720deg);
+    opacity: 0.6;
+  }
+}
+
+/* ---------- Mobil moslashuv ---------- */
+@media (max-width: 560px) {
+  html { font-size: 15px; }
+  .buyum, .azo { width: 78px; height: 78px; font-size: 2.1rem; }
+  .javob-tugma, .ortiqcha-karta { width: 88px; height: 88px; font-size: 2.4rem; }
+  .sezgi-panjara { grid-template-columns: repeat(3, 1fr); gap: 10px; }
+  .sezgi-karta .rasm { font-size: 2.3rem; }
+  .maskot-qator { flex-direction: column; }
+  .nutq-puffagi::before { display: none; }
+  .tartib-karta { width: 74px; height: 74px; font-size: 2.1rem; }
+  .tartib-slot { width: 64px; height: 64px; font-size: 1.9rem; }
+}
+
+/* ---------- O'yin: Ketma-ketlik (tartib) ---------- */
+.tartib-nishon {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin: 12px 0 20px;
+}
+
+.tartib-slot {
+  width: 84px;
+  height: 84px;
+  border: 3px dashed #c3c8dd;
+  border-radius: 18px;
+  background: #fafbff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.4rem;
+  color: #b9bede;
+  font-weight: 800;
+}
+
+.tartib-slot .tartib-tartibraqam { font-size: 0.9rem; }
+
+.tartib-slot.toldi {
+  border-style: solid;
+  border-color: var(--yashil);
+  background: #ecfbf3;
+  color: var(--matn);
+}
+
+.tartib-slot .yozuv { font-size: 0.62rem; font-weight: 800; color: #6b7194; }
+
+.tartib-manba {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.tartib-karta {
+  width: 92px;
+  height: 92px;
+  border: 3px solid #e2e7fb;
+  border-radius: 20px;
+  background: #f7f9ff;
+  font-size: 2.6rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  transition: transform 0.15s, border-color 0.15s, opacity 0.3s;
+}
+
+.tartib-karta .yozuv { font-size: 0.66rem; font-weight: 800; color: #6b7194; }
+
+.tartib-karta:hover { transform: scale(1.07); }
+
+.tartib-karta.ishlatilgan {
+  opacity: 0;
+  pointer-events: none;
+  transform: scale(0.3);
+}
+
+/* ---------- O'yin: Rost va yolg'on ---------- */
+.ry-rasm { font-size: 4.5rem; margin: 6px 0; }
+
+.ry-gap {
+  font-size: 1.2rem;
+  font-weight: 800;
+  margin: 8px auto 18px;
+  max-width: 520px;
+  min-height: 40px;
+}
+
+.ry-tugmalar {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+}
+
+.ry-tugma {
+  font-size: 1.15rem;
+  font-weight: 800;
+  padding: 14px 30px;
+  border-radius: 999px;
+  border: 3px solid;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: transform 0.12s;
+}
+
+.ry-tugma:hover { transform: scale(1.05); }
+
+.ry-rost { color: var(--yashil); border-color: var(--yashil); background: #ecfbf3; }
+.ry-yolgon { color: var(--qizil); border-color: var(--qizil); background: #ffefef; }
+.ry-tugma.bloklangan { opacity: 0.45; pointer-events: none; }
+.ry-tugma.tanlangan-togri { box-shadow: 0 0 0 4px rgba(52, 199, 123, 0.3); }
+.ry-tugma.tanlangan-xato { box-shadow: 0 0 0 4px rgba(255, 107, 107, 0.3); }
+
+/* ---------- Yakuniy hisob-kitob satri ---------- */
+.viktorina-hisob-qator, .korsatma-hisob {
+  font-weight: 800;
+  color: var(--asosiy);
+}
+
+/* ============ SVG IKONLAR ============ */
+.ik {
+  height: 1em;
+  width: 1em;
+  display: inline-block;
+  vertical-align: -0.15em;
+  pointer-events: none;
+  user-select: none;
+}
+
+.yz {
+  height: 1em;
+  width: 1em;
+  display: inline-block;
+  vertical-align: -0.12em;
+  pointer-events: none;
+  user-select: none;
+}
+.yz-full { fill: var(--sariq); }
+.yz-empty { fill: #d5d9ef; }
+
+/* Sarlavhadagi jami yulduz hisoblagichi */
+.sarlavha { flex-wrap: wrap; }
+.sarlavha-matn { flex: 1; min-width: 160px; }
+.jami-yulduz {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 800;
+  font-size: 1.15rem;
+  background: var(--oq);
+  padding: 8px 15px;
+  border-radius: 999px;
+  box-shadow: var(--soya);
+  color: var(--matn);
+}
+.jami-yulduz .yz { font-size: 1.3rem; }
+
+/* Dars kartasidagi yulduz reytingi */
+.dars-karta .yulduzlar { font-size: 1.2rem; line-height: 1; }
+.tez-kunda { font-size: 0.85rem; font-weight: 800; color: #b9bede; }
+
+/* Yuqori paneldagi ikon tugmalar */
+.uyga-tugma, .ovoz-tugma {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Moslash o'yinidagi pastga o'q */
+.moslash-oq { font-size: 1.6rem; line-height: 1; }
+
+/* ---------- Lottie jonli ikonlar ---------- */
+.ik.lt { display: inline-block; line-height: 0; overflow: hidden; }
+.ik.lt > svg { width: 100% !important; height: 100% !important; display: block; }
+
+/* ---------- Ortga qaytish tugmasi ---------- */
+.orqaga-tugma {
+  background: var(--oq);
+  border-radius: 14px;
+  font-size: 1.3rem;
+  padding: 8px 13px;
+  box-shadow: var(--soya);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.14s;
+}
+.orqaga-tugma:hover { transform: scale(1.08); }
+.orqaga-tugma:active { transform: scale(0.93); }
+
+/* ============================================================
+   3D KO'RINISH — jonli, bolalar uchun qiziqarli
+============================================================ */
+:root {
+  --soya-3d: 0 6px 0 rgba(180, 190, 230, 0.55), 0 14px 26px rgba(60, 70, 130, 0.22);
+  --soya-3d-hover: 0 10px 0 rgba(170, 182, 226, 0.6), 0 22px 40px rgba(60, 70, 130, 0.3);
+}
+
+/* Jonli, sekin harakatlanadigan fon */
+body {
+  background: linear-gradient(160deg, #d7ecff 0%, #ece4ff 50%, #ffe6f1 100%);
+}
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background:
+    radial-gradient(circle at 18% 22%, rgba(120, 170, 255, 0.38), transparent 42%),
+    radial-gradient(circle at 82% 18%, rgba(255, 190, 130, 0.34), transparent 40%),
+    radial-gradient(circle at 25% 82%, rgba(120, 220, 170, 0.32), transparent 42%),
+    radial-gradient(circle at 80% 80%, rgba(255, 150, 190, 0.38), transparent 44%);
+}
+
+/* Katta ikonlar — ko'tarilgan stiker effekti (faqat yirik joylarda) */
+.sezgi-karta .ik, .buyum .ik, .azo .ik, .javob-tugma .ik,
+.ortiqcha-karta .ik, .tartib-karta .ik, .tartib-slot .ik,
+.savol-rasm .ik, .ry-rasm .ik {
+  filter: drop-shadow(0 2px 2px rgba(45, 51, 80, 0.2));
+}
+
+/* Maskot — 3D suzish + soya */
+.maskot-katta {
+  filter: drop-shadow(0 12px 10px rgba(60, 70, 130, 0.28));
+}
+.maskot .ik { filter: drop-shadow(0 5px 5px rgba(60, 70, 130, 0.3)); }
+
+/* Asosiy ekran kartasi — chuqurroq 3D */
+.ekran {
+  box-shadow: 0 10px 0 rgba(255, 255, 255, 0.5) inset, 0 18px 40px rgba(60, 70, 130, 0.2);
+  border: 2px solid rgba(255, 255, 255, 0.7);
+}
+
+/* Bosh sahifa dars kartalari — 3D ko'tarilish + egilish */
+.darslar-panjara { perspective: 900px; }
+a.dars-karta {
+  box-shadow: var(--soya-3d);
+  transform-style: preserve-3d;
+  transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.2s;
+}
+a.dars-karta::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 42%;
+  border-radius: 20px 20px 40px 40px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.6), transparent);
+  pointer-events: none;
+}
+a.dars-karta:hover {
+  transform: translateY(-8px) rotateX(9deg) scale(1.03);
+  border-color: var(--sariq);
+  box-shadow: var(--soya-3d-hover);
+}
+
+/* O'yin kartalari — 3D tugma (pastki qirra + bosilish) */
+.sezgi-karta, .buyum, .azo, .javob-tugma, .ortiqcha-karta, .tartib-karta {
+  box-shadow: 0 5px 0 #d4dbf2, 0 10px 18px rgba(60, 70, 130, 0.16);
+  transition: transform 0.14s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.14s, border-color 0.15s, background 0.2s;
+}
+.sezgi-karta:hover, .buyum:hover, .azo:hover,
+.javob-tugma:hover, .ortiqcha-karta:hover, .tartib-karta:hover {
+  transform: translateY(-5px) scale(1.05);
+  box-shadow: 0 9px 0 #d4dbf2, 0 16px 26px rgba(60, 70, 130, 0.22);
+}
+.sezgi-karta:active, .buyum:active, .azo:active,
+.javob-tugma:active, .ortiqcha-karta:active, .tartib-karta:active {
+  transform: translateY(2px) scale(0.98);
+  box-shadow: 0 2px 0 #d4dbf2, 0 5px 10px rgba(60, 70, 130, 0.18);
+}
+
+/* Katta tugmalar — yaltiroq gradient 3D */
+.katta-tugma {
+  background: linear-gradient(180deg, #46d98c, #2fbd75);
+  background-clip: padding-box;
+}
+.katta-tugma.ikkinchi {
+  background: linear-gradient(180deg, #6a83ff, #4f6df5);
+}
+
+/* Medal va yulduzlar 3D */
+.medal { filter: drop-shadow(0 10px 8px rgba(200, 140, 20, 0.4)); }
+.natija-yulduzlar .yz { filter: drop-shadow(0 4px 4px rgba(210, 150, 20, 0.45)); }
+
+/* ============ Boshqaruv paneli: til + ovoz ============ */
+.boshqaruv {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.til-tanla {
+  display: inline-flex;
+  background: var(--oq);
+  border-radius: 999px;
+  padding: 4px;
+  box-shadow: var(--soya);
+  gap: 2px;
+}
+.til-btn {
+  border: none;
+  background: transparent;
+  font-weight: 800;
+  font-size: 0.82rem;
+  color: #8a90b4;
+  padding: 6px 11px;
+  border-radius: 999px;
+  transition: transform 0.12s, background 0.15s, color 0.15s;
+}
+.til-btn:hover { transform: scale(1.08); }
+.til-btn.faol {
+  background: linear-gradient(180deg, #6a83ff, var(--asosiy));
+  color: #fff;
+  box-shadow: 0 3px 8px rgba(79, 109, 245, 0.4);
+}
+.mute-tugma {
+  background: var(--oq);
+  border-radius: 50%;
+  width: 44px;
+  height: 44px;
+  font-size: 1.3rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: var(--soya);
+  transition: transform 0.12s;
+}
+.mute-tugma:hover { transform: scale(1.1); }
+.mute-tugma:active { transform: scale(0.94); }
+
+/* Dars ustidagi panel joylashuvi */
+.dars-ust { flex-wrap: wrap; }
+
+@media (max-width: 560px) {
+  .til-btn { padding: 6px 8px; font-size: 0.76rem; }
+  .mute-tugma { width: 40px; height: 40px; }
+  .boshqaruv { gap: 6px; }
+}

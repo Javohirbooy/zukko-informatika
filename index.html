@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Zukko — Informatika 1-sinf</title>
+  <link rel="icon" href="icons/1f916.svg">
+  <link rel="stylesheet" href="css/style.css?v=5">
+</head>
+<body>
+
+  <header class="sarlavha">
+    <div class="maskot" id="bosh-maskot"></div>
+    <div class="sarlavha-matn">
+      <h1 id="bosh-sarlavha"></h1>
+      <div class="kichik" id="bosh-kichik"></div>
+    </div>
+    <div class="boshqaruv" id="boshqaruv"></div>
+    <div class="jami-yulduz" id="jami-yulduz" title="Yig'ilgan yulduzlar"></div>
+  </header>
+
+  <main class="oquv-xarita" id="xarita"></main>
+
+  <script src="js/lottie.min.js"></script>
+  <script src="js/anim_list.js"></script>
+  <script src="js/umumiy.js"></script>
+  <script src="js/tarjima.js"></script>
+  <script>
+    document.getElementById("bosh-maskot").innerHTML = jonliIkon("🤖");
+    document.getElementById("bosh-sarlavha").textContent = T("Zukko bilan Informatika");
+    document.getElementById("bosh-kichik").textContent = T("1-sinf · O'ynab o'rganamiz!");
+    const bq = document.getElementById("boshqaruv");
+    bq.innerHTML = boshqaruvHtml();
+    boshqaruvBogla(bq, () => location.reload());
+
+    const BOBLAR = [
+      {
+        belgi: "👀",
+        nomi: "1-bob. Biz olamni qanday qabul qilamiz?",
+        darslar: [
+          { id: 1, nomi: "Bizning sezgi a'zolarimiz" },
+          { id: 2, nomi: "Biz nimalarni ko'ramiz?" },
+          { id: 3, nomi: "Rang va shakl" },
+          { id: 4, nomi: "Biz nimalarni eshitamiz?" },
+          { id: 5, nomi: "Bular qanday hid taratadi?" },
+          { id: 6, nomi: "Turli xil ta'mlar" },
+          { id: 7, nomi: "Bizning his-tuyg'ularimiz" },
+          { id: 8, nomi: "Buyumlarga ta'rif beramiz" },
+          { id: 9, nomi: "Bizning dunyoqarashimiz" },
+        ]
+      },
+      {
+        belgi: "🔢",
+        nomi: "2-bob. Ketma-ketlik",
+        darslar: [
+          { id: 10, nomi: "Ketma-ketlik" },
+          { id: 11, nomi: "Oldin — keyin" },
+          { id: 12, nomi: "Edi — bo'ldi" },
+          { id: 13, nomi: "O'sish va kamayish tartibi" },
+          { id: 14, nomi: "Amallarning ketma-ketligi" },
+          { id: 15, nomi: "Tabiatdagi takrorlanish hodisalari" },
+          { id: 16, nomi: "Bizning sog'lom turmush tarzimiz" },
+        ]
+      },
+      {
+        belgi: "🧭",
+        nomi: "3-bob. Tomonlar va yo'nalishlar",
+        darslar: [
+          { id: 17, nomi: "Tepa — past" },
+          { id: 18, nomi: "Oldinda — orqada" },
+          { id: 19, nomi: "Chapda — o'ngda" },
+          { id: 20, nomi: "Uzoq — yaqin" },
+          { id: 21, nomi: "Yo'l va yo'nalish" },
+          { id: 22, nomi: "Uzun — qisqa" },
+          { id: 23, nomi: "Xavfsiz hudud" },
+          { id: 24, nomi: "Labirint" },
+          { id: 25, nomi: "Maktabdan uyga qaytish yo'li" },
+        ]
+      },
+      {
+        belgi: "🧩",
+        nomi: "4-bob. Samaradorlik",
+        darslar: [
+          { id: 26, nomi: "Narsalarni qismlarga ajratish" },
+          { id: 27, nomi: "Turli qismlardan yaxlit narsani yig'ish" },
+          { id: 28, nomi: "Taqqoslash" },
+          { id: 29, nomi: "Qarama-qarshi belgilar" },
+          { id: 30, nomi: "Tasdiq — inkor" },
+          { id: 31, nomi: "Rost va yolg'on" },
+          { id: 32, nomi: "Eng keraklisi" },
+          { id: 33, nomi: "Samarali natija" },
+        ]
+      }
+    ];
+
+    const TAYYOR = new Set(Array.from({ length: 33 }, (_, i) => i + 1));
+
+    // Umumiy progress: yig'ilgan / jami yulduzlar
+    let yigilgan = 0;
+    const jami = TAYYOR.size * 3;
+    BOBLAR.forEach(b => b.darslar.forEach(d => { if (TAYYOR.has(d.id)) yigilgan += Yulduzlar.ol(d.id); }));
+    document.getElementById("jami-yulduz").innerHTML =
+      `${yulduzIkon(true)}<span>${yigilgan} / ${jami}</span>`;
+
+    const xarita = document.getElementById("xarita");
+    BOBLAR.forEach(bob => {
+      const bobEl = document.createElement("section");
+      bobEl.className = "bob";
+      bobEl.innerHTML = `<div class="bob-nomi"><span class="belgi">${jonliIkon(bob.belgi)}</span>${T(bob.nomi)}</div>`;
+      const panjara = document.createElement("div");
+      panjara.className = "darslar-panjara";
+
+      bob.darslar.forEach(dars => {
+        if (TAYYOR.has(dars.id)) {
+          const a = document.createElement("a");
+          a.className = "dars-karta";
+          a.href = "dars.html?id=" + dars.id;
+          a.innerHTML = `
+            <span class="raqam">${dars.id}-${T("dars")}</span>
+            <span class="nom">${T(dars.nomi)}</span>
+            <span class="yulduzlar">${yulduzQator(Yulduzlar.ol(dars.id))}</span>`;
+          panjara.appendChild(a);
+        } else {
+          const div = document.createElement("div");
+          div.className = "dars-karta qulflangan";
+          div.innerHTML = `
+            <span class="qulf">${ikon("🔒")}</span>
+            <span class="raqam">${dars.id}-${T("dars")}</span>
+            <span class="nom">${T(dars.nomi)}</span>
+            <span class="yulduzlar tez-kunda">${T("Tez kunda")}</span>`;
+          panjara.appendChild(div);
+        }
+      });
+      bobEl.appendChild(panjara);
+      xarita.appendChild(bobEl);
+    });
+    jonlilashtir(document.body);
+  </script>
+</body>
+</html>
